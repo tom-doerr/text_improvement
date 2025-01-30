@@ -36,27 +36,26 @@ def main():
             data['instruction'] = instruction
             save_data(data)
     
-    input_text = st.text_area("Enter your text:", height=150)
+    input_text = st.text_area("Enter your text:", height=150, key="input")
     
-    if st.button("Process"):
-        if input_text:
-            reasoning, issues, improved_text = pipe(
-                data['few_shot_examples'], 
-                data['instruction'], 
-                input_text
-            )
-            
-            st.subheader("Results")
-            st.write("Reasoning:", reasoning)
-            st.write("Issues:", issues)
-            st.write("Improved Text:", improved_text)
-            
-            data['last_run'] = {
-                'input_text': input_text,
-                'reasoning': reasoning,
-                'issues': issues,
-                'improved_text': improved_text
-            }
+    if input_text:
+        reasoning, issues, improved_text = pipe(
+            data['few_shot_examples'], 
+            data['instruction'], 
+            input_text
+        )
+        
+        st.subheader("Results")
+        st.write("Reasoning:", reasoning)
+        st.write("Issues:", issues)
+        st.write("Improved Text:", improved_text)
+        
+        data['last_run'] = {
+            'input_text': input_text,
+            'reasoning': reasoning,
+            'issues': issues,
+            'improved_text': improved_text
+        }
             
             if st.button("Add to Examples"):
                 if 'few_shot_examples' not in data:
