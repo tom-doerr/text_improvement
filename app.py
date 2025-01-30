@@ -5,6 +5,7 @@ import os
 import dspy
 from dspy.teleprompt import BootstrapFewShot
 from copy import deepcopy
+import pyperclip
 
 st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
 
@@ -152,8 +153,11 @@ def main():
                             with st.expander("Improved Text", expanded=True):
                                 st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
                                 if st.button("Copy to Clipboard", key=f"copy_{i}"):
-                                    st.write('<script>navigator.clipboard.writeText(`' + improved_text.replace('`', '\\`') + '`);</script>', unsafe_allow_html=True)
-                                    st.success("Copied to clipboard!")
+                                    try:
+                                        pyperclip.copy(improved_text)
+                                        st.success("Copied to clipboard!")
+                                    except Exception as e:
+                                        st.error(f"Failed to copy: {str(e)}")
                                 
                                 if st.button(f"Add to Fewshot", key=f"add_{i}"):
                                     example = {

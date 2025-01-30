@@ -1,3 +1,4 @@
 streamlit>=1.29.0
 dspy-ai>=2.5.6
 simpledspy>=0.0.1
+pyperclip>=1.8.2
