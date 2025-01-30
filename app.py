@@ -8,7 +8,7 @@ from dspy.teleprompt import BootstrapFewShot
 DATA_FILE = 'data.json'
 
 # Initialize LM
-dspy.settings.configure(lm=dspy.LM('gpt-4-mini'))
+dspy.settings.configure(lm=dspy.LM('gpt-4o-mini'))
 
 def load_data():
     if not os.path.exists(DATA_FILE):
