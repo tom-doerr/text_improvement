@@ -121,13 +121,22 @@ def main():
                     placeholders.append(st.empty())
             
             for i in range(num_completions):
-                reasoning, issues, improved_text = pipe(
-                    data['few_shot_examples'], 
-                    data['instruction'], 
-                    input_text
-                )
-                
-                with placeholders[i].container():
+                try:
+                    result = pipe(
+                        data['few_shot_examples'], 
+                        data['instruction'], 
+                        input_text
+                    )
+                    
+                    # Handle both tuple and dict return types
+                    if isinstance(result, tuple):
+                        reasoning, issues, improved_text = result
+                    else:
+                        reasoning = result.get('reasoning', '')
+                        issues = result.get('issues', '')
+                        improved_text = result.get('improved_text', reasoning)  # fallback to reasoning if no improved text
+                    
+                    with placeholders[i].container():
                     with st.spinner("Processing..."):
                         with st.expander("Reasoning", expanded=True):
                             st.write(reasoning)
