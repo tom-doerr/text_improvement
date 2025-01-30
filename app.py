@@ -153,30 +153,33 @@ def main():
         input_text = st.text_area("Enter your text:", height=150, key="input")
     
     if input_text:
-        completions = []
+        placeholders = []
+        for i in range(num_completions):
+            with completion_cols[i]:
+                st.markdown(f"### Completion {i+1}")
+                placeholders.append(st.empty())
+        
         for i in range(num_completions):
             reasoning, issues, improved_text = pipe(
                 data['few_shot_examples'], 
                 data['instruction'], 
                 input_text
             )
-            completions.append((reasoning, issues, improved_text))
-        
-        for i, (reasoning, issues, improved_text) in enumerate(completions):
-            with completion_cols[i]:
-                st.markdown(f"### Completion {i+1}")
+            
+            with placeholders[i].container():
                 
-                with st.expander("Reasoning", expanded=True):
-                    st.write(reasoning)
-                
-                with st.expander("Issues", expanded=True):
-                    st.write(issues)
-                
-                with st.expander("Improved Text", expanded=True):
-                    st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
-                    st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
-                
-                if st.button(f"Add to Examples", key=f"add_{i}"):
+                with st.spinner("Processing..."):
+                    with st.expander("Reasoning", expanded=True):
+                        st.write(reasoning)
+                    
+                    with st.expander("Issues", expanded=True):
+                        st.write(issues)
+                    
+                    with st.expander("Improved Text", expanded=True):
+                        st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
+                        st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
+                    
+                    if st.button(f"Add to Examples", key=f"add_{i}"):
                     example = {
                         'input_text': input_text,
                         'reasoning': reasoning,
