@@ -92,10 +92,10 @@ def main():
         if examples:
             for i, example in enumerate(examples, 1):
                 with st.expander(f"Example {i}", expanded=False):
-                    st.text_area("Input", value=example['input_text'], disabled=True, height=100)
-                    st.text_area("Reasoning", value=example['reasoning'], disabled=True, height=100)
-                    st.text_area("Issues", value=example['issues'], disabled=True, height=100)
-                    st.text_area("Improved", value=example['improved_text'], disabled=True, height=100)
+                    st.text_area("Input", value=example['input_text'], disabled=True, height=100, key=f"view_input_{i}")
+                    st.text_area("Reasoning", value=example['reasoning'], disabled=True, height=100, key=f"view_reasoning_{i}")
+                    st.text_area("Issues", value=example['issues'], disabled=True, height=100, key=f"view_issues_{i}")
+                    st.text_area("Improved", value=example['improved_text'], disabled=True, height=100, key=f"view_improved_{i}")
         else:
             st.info("No examples yet. Add some completions to build up your examples!")
     
