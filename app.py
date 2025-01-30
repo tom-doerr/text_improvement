@@ -124,7 +124,7 @@ def main():
                 with placeholders[i].container():
                     with st.spinner("Processing..."):
                         with st.expander("Reasoning", expanded=True):
-                        st.write(reasoning)
+                            st.write(reasoning)
                     
                     with st.expander("Issues", expanded=True):
                         st.write(issues)
