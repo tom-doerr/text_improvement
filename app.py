@@ -10,7 +10,7 @@ st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
 DATA_FILE = 'data.json'
 
 # Initialize LM
-dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat'))
+dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=False))
 
 def load_data():
     print(f"\nDEBUG: Checking if {DATA_FILE} exists")
