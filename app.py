@@ -128,13 +128,18 @@ def main():
                         input_text
                     )
                     
-                    # Handle both tuple and dict return types
+                    # Handle different return types
                     if isinstance(result, tuple):
                         reasoning, issues, improved_text = result
-                    else:
+                    elif isinstance(result, dict):
                         reasoning = result.get('reasoning', '')
                         issues = result.get('issues', '')
-                        improved_text = result.get('improved_text', reasoning)  # fallback to reasoning if no improved text
+                        improved_text = result.get('improved_text', reasoning)
+                    else:
+                        # Handle string or other return types
+                        reasoning = str(result)
+                        issues = ''
+                        improved_text = str(result)
                     
                     with placeholders[i].container():
                         with st.spinner("Processing..."):
