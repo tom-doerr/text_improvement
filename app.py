@@ -145,8 +145,8 @@ def main():
                                 st.write(issues)
                         
                             with st.expander("Improved Text", expanded=True):
-                        st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
-                        st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
+                                st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
+                                st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
                     
                     if st.button(f"Add to Examples", key=f"add_{i}"):
                         example = {
