@@ -41,45 +41,62 @@ def main():
         num_completions = st.number_input("Number of completions", min_value=1, max_value=5, value=3)
         
         st.header("Current Examples")
-        if data['few_shot_examples']:
-            for i, example in enumerate(data['few_shot_examples'], 1):
-                with st.expander(f"Example {i}"):
-                    st.write("Input:", example['input_text'])
-                    st.write("Reasoning:", example['reasoning'])
-                    st.write("Issues:", example['issues'])
-                    st.write("Improved:", example['improved_text'])
-    
-    input_text = st.text_area("Enter your text:", height=150, key="input")
-    
-    if input_text:
-        st.subheader("Results")
+        examples = data.get('few_shot_examples', [])
+        st.write(f"Number of examples: {len(examples)}")
         
-        for i in range(num_completions):
-            with st.container():
+        if examples:
+            for i, example in enumerate(examples, 1):
+                with st.expander(f"Example {i}", expanded=False):
+                    st.text_area("Input", value=example['input_text'], disabled=True, height=100)
+                    st.text_area("Reasoning", value=example['reasoning'], disabled=True, height=100)
+                    st.text_area("Issues", value=example['issues'], disabled=True, height=100)
+                    st.text_area("Improved", value=example['improved_text'], disabled=True, height=100)
+        else:
+            st.info("No examples yet. Add some completions to build up your examples!")
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        input_text = st.text_area("Enter your text:", height=150, key="input")
+    
+    with col2:
+        if input_text:
+            st.subheader("Results")
+            
+            for i in range(num_completions):
                 reasoning, issues, improved_text = pipe(
                     data['few_shot_examples'], 
                     data['instruction'], 
                     input_text
                 )
                 
-                with st.expander(f"Completion {i+1}", expanded=True):
-                    st.write("Reasoning:", reasoning)
-                    st.write("Issues:", issues)
-                    st.write("Improved Text:", improved_text)
-        
-        data['last_run'] = {
-            'input_text': input_text,
-            'reasoning': reasoning,
-            'issues': issues,
-            'improved_text': improved_text
-        }
-        
-        if st.button("Add to Examples"):
-            if 'few_shot_examples' not in data:
-                data['few_shot_examples'] = []
-            data['few_shot_examples'].append(data['last_run'])
-            save_data(data)
-            st.success("Example added!")
+                with st.container():
+                    st.markdown(f"### Completion {i+1}")
+                    
+                    with st.expander("Reasoning", expanded=True):
+                        st.write(reasoning)
+                    
+                    with st.expander("Issues", expanded=True):
+                        st.write(issues)
+                    
+                    with st.expander("Improved Text", expanded=True):
+                        st.text_area("", value=improved_text, height=100, key=f"improved_{i}")
+                        st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
+                    
+                    if st.button(f"Add Completion {i+1} to Examples", key=f"add_{i}"):
+                        if 'few_shot_examples' not in data:
+                            data['few_shot_examples'] = []
+                        example = {
+                            'input_text': input_text,
+                            'reasoning': reasoning,
+                            'issues': issues,
+                            'improved_text': improved_text
+                        }
+                        data['few_shot_examples'].append(example)
+                        save_data(data)
+                        st.success(f"Added completion {i+1} to examples!")
+                    
+                    st.markdown("---")
 
 if __name__ == '__main__':
     main()
