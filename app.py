@@ -137,14 +137,14 @@ def main():
                         improved_text = result.get('improved_text', reasoning)  # fallback to reasoning if no improved text
                     
                     with placeholders[i].container():
-                    with st.spinner("Processing..."):
-                        with st.expander("Reasoning", expanded=True):
-                            st.write(reasoning)
-                    
-                    with st.expander("Issues", expanded=True):
-                        st.write(issues)
-                    
-                    with st.expander("Improved Text", expanded=True):
+                        with st.spinner("Processing..."):
+                            with st.expander("Reasoning", expanded=True):
+                                st.write(reasoning)
+                        
+                            with st.expander("Issues", expanded=True):
+                                st.write(issues)
+                        
+                            with st.expander("Improved Text", expanded=True):
                         st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
                         st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
                     
