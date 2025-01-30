@@ -113,22 +113,22 @@ def main():
                     st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
                 
                 if st.button(f"Add to Examples", key=f"add_{i}"):
-                        example = {
-                            'input_text': input_text,
-                            'reasoning': reasoning,
-                            'issues': issues,
-                            'improved_text': improved_text
-                        }
-                        # Create new data dict with just this example
-                        new_data = {
-                            'instruction': data['instruction'],
-                            'few_shot_examples': [example]
-                        }
-                        save_data(new_data)
-                        st.success(f"Added completion {i+1} to examples!")
-                        st.experimental_rerun()  # Refresh to show new example
-                    
-                    st.markdown("---")
+                    example = {
+                        'input_text': input_text,
+                        'reasoning': reasoning,
+                        'issues': issues,
+                        'improved_text': improved_text
+                    }
+                    # Create new data dict with just this example
+                    new_data = {
+                        'instruction': data['instruction'],
+                        'few_shot_examples': [example]
+                    }
+                    save_data(new_data)
+                    st.success(f"Added completion {i+1} to examples!")
+                    st.experimental_rerun()  # Refresh to show new example
+                
+                st.markdown("---")
 
 if __name__ == '__main__':
     main()
