@@ -171,10 +171,7 @@ def main():
     with tab2:
         st.header("Edit Examples")
         if examples:
-            col1, col2 = st.columns([3, 1])
-            
-            with col1:
-                for i, example in enumerate(examples):
+            for i, example in enumerate(examples):
                     if i in st.session_state.to_delete:
                         continue
                         
@@ -200,22 +197,20 @@ def main():
                             st.session_state.to_delete.add(i)
                             st.session_state.modified = True
             
-            with col2:
-                if st.session_state.modified:
-                    if st.button("Save Changes", use_container_width=True):
-                        # Remove examples marked for deletion
-                        examples = [ex for i, ex in enumerate(examples) if i not in st.session_state.to_delete]
-                        
-                        # Save updated examples
-                        new_data = {
-                            'instruction': data['instruction'],
-                            'few_shot_examples': examples
-                        }
-                        save_data(new_data)
-                        st.session_state.data = new_data
-                        st.session_state.modified = False
-                        st.session_state.to_delete = set()
-                        st.success("Changes saved!")
+            # Auto-save changes when modifications are detected
+            if st.session_state.modified:
+                # Remove examples marked for deletion
+                examples = [ex for i, ex in enumerate(examples) if i not in st.session_state.to_delete]
+                
+                # Save updated examples
+                new_data = {
+                    'instruction': data['instruction'],
+                    'few_shot_examples': examples
+                }
+                save_data(new_data)
+                st.session_state.data = new_data
+                st.session_state.modified = False
+                st.session_state.to_delete = set()
         else:
             st.info("No examples to edit.")
 
