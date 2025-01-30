@@ -4,6 +4,7 @@ import json
 import os
 import dspy
 from dspy.teleprompt import BootstrapFewShot
+from copy import deepcopy
 
 st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
 
@@ -74,7 +75,12 @@ def save_data(data):
 def main():
     st.title("SimpleDSPY Interface")
     
-    data = load_data()
+    if 'data' not in st.session_state:
+        st.session_state.data = load_data()
+        st.session_state.modified = False
+        st.session_state.to_delete = set()
+    
+    data = st.session_state.data
     
     with st.sidebar:
         st.header("Settings")
@@ -154,13 +160,14 @@ def main():
     with tab2:
         st.header("Edit Examples")
         if examples:
-            to_delete = []
             col1, col2 = st.columns([3, 1])
             
             with col1:
                 for i, example in enumerate(examples):
+                    if i in st.session_state.to_delete:
+                        continue
+                        
                     with st.expander(f"Edit Example {i+1}", expanded=False):
-                        modified = False
                         new_input = st.text_area("Input", value=example['input_text'], key=f"edit_input_{i}", height=100)
                         new_reasoning = st.text_area("Reasoning", value=example['reasoning'], key=f"edit_reasoning_{i}", height=100)
                         new_issues = st.text_area("Issues", value=example['issues'], key=f"edit_issues_{i}", height=100)
@@ -170,24 +177,23 @@ def main():
                             new_reasoning != example['reasoning'] or 
                             new_issues != example['issues'] or 
                             new_improved != example['improved_text']):
-                            modified = True
                             examples[i] = {
                                 'input_text': new_input,
                                 'reasoning': new_reasoning,
                                 'issues': new_issues,
                                 'improved_text': new_improved
                             }
+                            st.session_state.modified = True
                         
                         if st.button("Delete Example", key=f"delete_{i}"):
-                            to_delete.append(i)
-                            st.warning("Example will be deleted after saving")
+                            st.session_state.to_delete.add(i)
+                            st.session_state.modified = True
             
             with col2:
-                if modified or to_delete:
+                if st.session_state.modified:
                     if st.button("Save Changes", use_container_width=True):
                         # Remove examples marked for deletion
-                        for index in sorted(to_delete, reverse=True):
-                            del examples[index]
+                        examples = [ex for i, ex in enumerate(examples) if i not in st.session_state.to_delete]
                         
                         # Save updated examples
                         new_data = {
@@ -195,8 +201,10 @@ def main():
                             'few_shot_examples': examples
                         }
                         save_data(new_data)
+                        st.session_state.data = new_data
+                        st.session_state.modified = False
+                        st.session_state.to_delete = set()
                         st.success("Changes saved!")
-                        st.rerun()
         else:
             st.info("No examples to edit.")
 
