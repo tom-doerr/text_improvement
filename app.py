@@ -14,17 +14,36 @@ dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat'))
 
 def load_data():
     if not os.path.exists(DATA_FILE):
-        save_data({
+        initial_data = {
             'instruction': '',
-            'few_shot_examples': [],
-        })
-    with open(DATA_FILE) as f:
-        data = json.load(f)
-    return data
+            'few_shot_examples': []
+        }
+        save_data(initial_data)
+        return initial_data
+        
+    try:
+        with open(DATA_FILE) as f:
+            data = json.load(f)
+            if 'few_shot_examples' not in data:
+                data['few_shot_examples'] = []
+            return data
+    except json.JSONDecodeError:
+        st.error("Error reading data file. Creating new one.")
+        initial_data = {
+            'instruction': '',
+            'few_shot_examples': []
+        }
+        save_data(initial_data)
+        return initial_data
 
 def save_data(data):
+    # Ensure we don't save 'last_run' to prevent bloat
+    data_to_save = {
+        'instruction': data.get('instruction', ''),
+        'few_shot_examples': data.get('few_shot_examples', [])
+    }
     with open(DATA_FILE, 'w') as f:
-        json.dump(data, f)
+        json.dump(data_to_save, f, indent=2)
 
 def main():
     st.title("SimpleDSPY Interface")
@@ -84,8 +103,6 @@ def main():
                         st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
                     
                     if st.button(f"Add Completion {i+1} to Examples", key=f"add_{i}"):
-                        if 'few_shot_examples' not in data:
-                            data['few_shot_examples'] = []
                         example = {
                             'input_text': input_text,
                             'reasoning': reasoning,
@@ -95,6 +112,7 @@ def main():
                         data['few_shot_examples'].append(example)
                         save_data(data)
                         st.success(f"Added completion {i+1} to examples!")
+                        st.experimental_rerun()  # Refresh to show new example
                     
                     st.markdown("---")
 
