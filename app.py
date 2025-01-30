@@ -85,19 +85,67 @@ def main():
             
         num_completions = st.number_input("Number of completions", min_value=1, max_value=5, value=3)
         
-        st.header("Current Examples")
-        examples = data.get('few_shot_examples', [])
-        st.write(f"Number of examples: {len(examples)}")
+        tab1, tab2 = st.tabs(["View Examples", "Manage Examples"])
         
-        if examples:
-            for i, example in enumerate(examples, 1):
-                with st.expander(f"Example {i}", expanded=False):
-                    st.text_area("Input", value=example['input_text'], disabled=True, height=100)
-                    st.text_area("Reasoning", value=example['reasoning'], disabled=True, height=100)
-                    st.text_area("Issues", value=example['issues'], disabled=True, height=100)
-                    st.text_area("Improved", value=example['improved_text'], disabled=True, height=100)
-        else:
-            st.info("No examples yet. Add some completions to build up your examples!")
+        with tab1:
+            st.header("Current Examples")
+            examples = data.get('few_shot_examples', [])
+            st.write(f"Number of examples: {len(examples)}")
+            
+            if examples:
+                for i, example in enumerate(examples, 1):
+                    with st.expander(f"Example {i}", expanded=False):
+                        st.text_area("Input", value=example['input_text'], disabled=True, height=100)
+                        st.text_area("Reasoning", value=example['reasoning'], disabled=True, height=100)
+                        st.text_area("Issues", value=example['issues'], disabled=True, height=100)
+                        st.text_area("Improved", value=example['improved_text'], disabled=True, height=100)
+            else:
+                st.info("No examples yet. Add some completions to build up your examples!")
+        
+        with tab2:
+            st.header("Edit Examples")
+            if examples:
+                to_delete = []
+                for i, example in enumerate(examples):
+                    with st.expander(f"Edit Example {i+1}", expanded=False):
+                        modified = False
+                        new_input = st.text_area("Input", value=example['input_text'], key=f"edit_input_{i}", height=100)
+                        new_reasoning = st.text_area("Reasoning", value=example['reasoning'], key=f"edit_reasoning_{i}", height=100)
+                        new_issues = st.text_area("Issues", value=example['issues'], key=f"edit_issues_{i}", height=100)
+                        new_improved = st.text_area("Improved", value=example['improved_text'], key=f"edit_improved_{i}", height=100)
+                        
+                        if (new_input != example['input_text'] or 
+                            new_reasoning != example['reasoning'] or 
+                            new_issues != example['issues'] or 
+                            new_improved != example['improved_text']):
+                            modified = True
+                            examples[i] = {
+                                'input_text': new_input,
+                                'reasoning': new_reasoning,
+                                'issues': new_issues,
+                                'improved_text': new_improved
+                            }
+                        
+                        if st.button("Delete Example", key=f"delete_{i}"):
+                            to_delete.append(i)
+                            st.warning("Example will be deleted after saving")
+                
+                if modified or to_delete:
+                    if st.button("Save Changes"):
+                        # Remove examples marked for deletion
+                        for index in sorted(to_delete, reverse=True):
+                            del examples[index]
+                        
+                        # Save updated examples
+                        new_data = {
+                            'instruction': data['instruction'],
+                            'few_shot_examples': examples
+                        }
+                        save_data(new_data)
+                        st.success("Changes saved!")
+                        st.rerun()
+            else:
+                st.info("No examples to edit.")
     
     input_col, *completion_cols = st.columns([1] + [1] * num_completions)
     
