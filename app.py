@@ -108,11 +108,11 @@ def main():
             input_text = st.text_area("Enter your text:", height=150, key="input")
         
         if input_text:
-        placeholders = []
-        for i in range(num_completions):
-            with completion_cols[i]:
-                st.markdown(f"### Completion {i+1}")
-                placeholders.append(st.empty())
+            placeholders = []
+            for i in range(num_completions):
+                with completion_cols[i]:
+                    st.markdown(f"### Completion {i+1}")
+                    placeholders.append(st.empty())
         
         for i in range(num_completions):
             reasoning, issues, improved_text = pipe(
