@@ -156,20 +156,20 @@ def main():
                                     st.success("Copied to clipboard!")
                                 
                                 if st.button(f"Add to Fewshot", key=f"add_{i}"):
-                        example = {
-                            'input_text': input_text,
-                            'reasoning': reasoning,
-                            'issues': issues,
-                            'improved_text': improved_text
-                        }
-                        # Create new data dict with just this example
-                        new_data = {
-                            'instruction': data['instruction'],
-                            'few_shot_examples': [example]
-                        }
-                        save_data(new_data)
-                        st.success(f"Added completion {i+1} to examples!")
-                        st.rerun()  # Updated from experimental_rerun
+                                    example = {
+                                        'input_text': input_text,
+                                        'reasoning': reasoning,
+                                        'issues': issues,
+                                        'improved_text': improved_text
+                                    }
+                                    # Create new data dict with just this example
+                                    new_data = {
+                                        'instruction': data['instruction'],
+                                        'few_shot_examples': [example]
+                                    }
+                                    save_data(new_data)
+                                    st.success(f"Added completion {i+1} to examples!")
+                                    st.rerun()  # Updated from experimental_rerun
                     
                     st.markdown("---")
                 except Exception as e:
