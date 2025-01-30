@@ -37,11 +37,21 @@ def load_data():
         return initial_data
 
 def save_data(data):
-    # Ensure we don't save 'last_run' to prevent bloat
+    # Load existing data first
+    existing_data = {}
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE) as f:
+                existing_data = json.load(f)
+        except json.JSONDecodeError:
+            pass
+    
+    # Update with new data while preserving existing examples
     data_to_save = {
-        'instruction': data.get('instruction', ''),
-        'few_shot_examples': data.get('few_shot_examples', [])
+        'instruction': data.get('instruction', existing_data.get('instruction', '')),
+        'few_shot_examples': existing_data.get('few_shot_examples', []) + data.get('few_shot_examples', [])
     }
+    
     with open(DATA_FILE, 'w') as f:
         json.dump(data_to_save, f, indent=2)
 
@@ -109,8 +119,12 @@ def main():
                             'issues': issues,
                             'improved_text': improved_text
                         }
-                        data['few_shot_examples'].append(example)
-                        save_data(data)
+                        # Create new data dict with just this example
+                        new_data = {
+                            'instruction': data['instruction'],
+                            'few_shot_examples': [example]
+                        }
+                        save_data(new_data)
                         st.success(f"Added completion {i+1} to examples!")
                         st.experimental_rerun()  # Refresh to show new example
                     
