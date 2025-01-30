@@ -56,13 +56,13 @@ def main():
             'issues': issues,
             'improved_text': improved_text
         }
-            
-            if st.button("Add to Examples"):
-                if 'few_shot_examples' not in data:
-                    data['few_shot_examples'] = []
-                data['few_shot_examples'].append(data['last_run'])
-                save_data(data)
-                st.success("Example added!")
+        
+        if st.button("Add to Examples"):
+            if 'few_shot_examples' not in data:
+                data['few_shot_examples'] = []
+            data['few_shot_examples'].append(data['last_run'])
+            save_data(data)
+            st.success("Example added!")
 
 if __name__ == '__main__':
     main()
