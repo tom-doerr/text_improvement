@@ -151,9 +151,11 @@ def main():
                         
                             with st.expander("Improved Text", expanded=True):
                                 st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
-                                st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
-                    
-                    if st.button(f"Add to Examples", key=f"add_{i}"):
+                                if st.button("Copy to Clipboard", key=f"copy_{i}"):
+                                    st.write('<script>navigator.clipboard.writeText(`' + improved_text.replace('`', '\\`') + '`);</script>', unsafe_allow_html=True)
+                                    st.success("Copied to clipboard!")
+                                
+                                if st.button(f"Add to Fewshot", key=f"add_{i}"):
                         example = {
                             'input_text': input_text,
                             'reasoning': reasoning,
