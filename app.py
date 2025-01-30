@@ -163,8 +163,10 @@ def main():
                         save_data(new_data)
                         st.success(f"Added completion {i+1} to examples!")
                         st.rerun()  # Updated from experimental_rerun
-                
-                st.markdown("---")
+                    
+                    st.markdown("---")
+                except Exception as e:
+                    st.error(f"Error processing completion {i+1}: {str(e)}")
     
     with tab2:
         st.header("Edit Examples")
