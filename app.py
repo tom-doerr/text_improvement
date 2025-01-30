@@ -2,8 +2,14 @@ import streamlit as st
 from simpledspy import pipe
 import json
 import os
+import dspy
+from dspy.teleprompt import BootstrapFewShot
+from dspy.predict import OpenAI
 
 DATA_FILE = 'data.json'
+
+# Initialize LM
+dspy.settings.configure(lm=OpenAI(model='gpt-3.5-turbo'))
 
 def load_data():
     if not os.path.exists(DATA_FILE):
