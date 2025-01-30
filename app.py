@@ -83,36 +83,36 @@ def main():
         else:
             st.info("No examples yet. Add some completions to build up your examples!")
     
-    col1, col2 = st.columns([1, 1])
+    input_col, *completion_cols = st.columns([1] + [1] * num_completions)
     
-    with col1:
+    with input_col:
         input_text = st.text_area("Enter your text:", height=150, key="input")
     
-    with col2:
-        if input_text:
-            st.subheader("Results")
-            
-            for i in range(num_completions):
-                reasoning, issues, improved_text = pipe(
-                    data['few_shot_examples'], 
-                    data['instruction'], 
-                    input_text
-                )
+    if input_text:
+        completions = []
+        for i in range(num_completions):
+            reasoning, issues, improved_text = pipe(
+                data['few_shot_examples'], 
+                data['instruction'], 
+                input_text
+            )
+            completions.append((reasoning, issues, improved_text))
+        
+        for i, (reasoning, issues, improved_text) in enumerate(completions):
+            with completion_cols[i]:
+                st.markdown(f"### Completion {i+1}")
                 
-                with st.container():
-                    st.markdown(f"### Completion {i+1}")
-                    
-                    with st.expander("Reasoning", expanded=True):
-                        st.write(reasoning)
-                    
-                    with st.expander("Issues", expanded=True):
-                        st.write(issues)
-                    
-                    with st.expander("Improved Text", expanded=True):
-                        st.text_area("", value=improved_text, height=100, key=f"improved_{i}")
-                        st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
-                    
-                    if st.button(f"Add Completion {i+1} to Examples", key=f"add_{i}"):
+                with st.expander("Reasoning", expanded=True):
+                    st.write(reasoning)
+                
+                with st.expander("Issues", expanded=True):
+                    st.write(issues)
+                
+                with st.expander("Improved Text", expanded=True):
+                    st.text_area("", value=improved_text, height=100, key=f"improved_{i}")
+                    st.button("Copy", key=f"copy_{i}", help="Copy improved text to clipboard")
+                
+                if st.button(f"Add to Examples", key=f"add_{i}"):
                         example = {
                             'input_text': input_text,
                             'reasoning': reasoning,
