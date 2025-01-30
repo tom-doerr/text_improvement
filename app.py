@@ -113,15 +113,15 @@ def main():
                 with completion_cols[i]:
                     st.markdown(f"### Completion {i+1}")
                     placeholders.append(st.empty())
-        
-        for i in range(num_completions):
-            reasoning, issues, improved_text = pipe(
-                data['few_shot_examples'], 
-                data['instruction'], 
-                input_text
-            )
             
-            with placeholders[i].container():
+            for i in range(num_completions):
+                reasoning, issues, improved_text = pipe(
+                    data['few_shot_examples'], 
+                    data['instruction'], 
+                    input_text
+                )
+                
+                with placeholders[i].container():
                 
                 with st.spinner("Processing..."):
                     with st.expander("Reasoning", expanded=True):
