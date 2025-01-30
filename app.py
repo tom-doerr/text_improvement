@@ -179,7 +179,8 @@ def main():
                 except Exception as e:
                     st.error(f"Error processing completion {i+1}: {str(e)}")
     
-    with tab2:
+    @st.fragment
+    def edit_examples(examples, data):
         st.header("Edit Examples")
         if examples:
             for i, example in enumerate(examples):
@@ -224,6 +225,9 @@ def main():
                 st.session_state.to_delete = set()
         else:
             st.info("No examples to edit.")
+    
+    with tab2:
+        edit_examples(examples, data)
 
 if __name__ == '__main__':
     main()
