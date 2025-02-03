@@ -12,7 +12,9 @@ st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
 DATA_FILE = 'data.json'
 
 # Initialize LM
-dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=False))
+# dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=True, max_tokens=200))
+dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=1.5, cache=True, max_tokens=300))
+
 
 def load_data():
     print(f"\nDEBUG: Checking if {DATA_FILE} exists")
@@ -123,24 +125,24 @@ def main():
             
             for i in range(num_completions):
                 try:
-                    result = pipe(
+                    # result = pipe(
+                    reasoning, issues, improved_text = pipe(
                         data['few_shot_examples'], 
                         data['instruction'], 
                         input_text
                     )
-                    
                     # Handle different return types
-                    if isinstance(result, tuple):
-                        reasoning, issues, improved_text = result
-                    elif isinstance(result, dict):
-                        reasoning = result.get('reasoning', '')
-                        issues = result.get('issues', '')
-                        improved_text = result.get('improved_text', reasoning)
-                    else:
-                        # Handle string or other return types
-                        reasoning = str(result)
-                        issues = ''
-                        improved_text = str(result)
+                    # if isinstance(result, tuple):
+                        # reasoning, issues, improved_text = result
+                    # elif isinstance(result, dict):
+                        # reasoning = result.get('reasoning', '')
+                        # issues = result.get('issues', '')
+                        # improved_text = result.get('improved_text', reasoning)
+                    # else:
+                        # # Handle string or other return types
+                        # reasoning = str(result)
+                        # issues = ''
+                        # improved_text = str(result)
                     
                     with placeholders[i].container():
                         with st.spinner("Processing..."):
