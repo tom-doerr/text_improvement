@@ -168,6 +168,15 @@ def main():
                                         'issues': issues,
                                         'improved_text': improved_text
                                     }
+                                    
+                                    # Check if example already exists
+                                    existing_examples = data.get('few_shot_examples', [])
+                                    for existing in existing_examples:
+                                        if (existing['input_text'] == input_text and 
+                                            existing['improved_text'] == improved_text):
+                                            st.warning("This example already exists!")
+                                            return
+                                    
                                     # Create new data dict with just this example
                                     new_data = {
                                         'instruction': data['instruction'],
