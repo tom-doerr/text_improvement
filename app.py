@@ -50,31 +50,9 @@ def load_data():
 
 def save_data(data):
     print("\nDEBUG: Saving data")
-    # Load existing data first
-    existing_data = {}
-    if os.path.exists(DATA_FILE):
-        try:
-            print("DEBUG: Loading existing data before save")
-            with open(DATA_FILE) as f:
-                existing_data = json.load(f)
-                print(f"DEBUG: Existing data: {json.dumps(existing_data, indent=2)}")
-        except json.JSONDecodeError as e:
-            print(f"DEBUG: Error loading existing data: {e}")
-    
-    # Update with new data while preserving existing examples
-    existing_examples = existing_data.get('few_shot_examples', [])
-    new_examples = data.get('few_shot_examples', [])
-    print(f"DEBUG: Existing examples: {len(existing_examples)}")
-    print(f"DEBUG: New examples: {len(new_examples)}")
-    
-    data_to_save = {
-        'instruction': data.get('instruction', existing_data.get('instruction', '')),
-        'few_shot_examples': existing_examples + new_examples
-    }
-    
-    print(f"DEBUG: Saving final data: {json.dumps(data_to_save, indent=2)}")
+    print(f"DEBUG: Saving data: {json.dumps(data, indent=2)}")
     with open(DATA_FILE, 'w') as f:
-        json.dump(data_to_save, f, indent=2)
+        json.dump(data, f, indent=2)
 
 def main():
     st.title("SimpleDSPY Interface")
