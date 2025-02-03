@@ -4,7 +4,8 @@ from simpledspy import pipe
 import json
 import os
 
-DATA_FILE = 'data.json'
+# Store few-shot examples and instructions in JSON file
+DATA_FILE = 'data.json'  # Format: {"instruction": "", "few_shot_examples": [], "last_run": {}}
 
 def load_data():
     if not os.path.exists(DATA_FILE):

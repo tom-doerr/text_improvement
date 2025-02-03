@@ -9,7 +9,8 @@ import pyperclip
 
 st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
 
-DATA_FILE = 'data.json'
+# Store few-shot examples and instructions in JSON file
+DATA_FILE = 'data.json'  # Format: {"instruction": "", "few_shot_examples": [], "last_run": {}}
 
 # Initialize LM
 # dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=True, max_tokens=200))
