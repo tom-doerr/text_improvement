@@ -13,7 +13,7 @@ DATA_FILE = 'data.json'
 
 # Initialize LM
 # dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=True, max_tokens=200))
-dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=1.5, cache=True, max_tokens=300))
+dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=1.5, cache=False, max_tokens=300))
 
 
 def load_data():
