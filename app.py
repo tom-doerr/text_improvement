@@ -148,20 +148,26 @@ def main():
                                         'improved_text': improved_text
                                     }
                                     
-                                    # Check if example already exists
+                                    # Get existing examples and check for duplicates
                                     existing_examples = data.get('few_shot_examples', [])
+                                    
+                                    # Check if this example is unique
+                                    is_duplicate = False
                                     for existing in existing_examples:
                                         if (existing['input_text'] == input_text and 
                                             existing['improved_text'] == improved_text):
                                             st.warning("This example already exists!")
-                                            return
+                                            is_duplicate = True
+                                            break
                                     
-                                    # Create new data dict with just this example
-                                    new_data = {
-                                        'instruction': data['instruction'],
-                                        'few_shot_examples': [example]
-                                    }
-                                    save_data(new_data)
+                                    if not is_duplicate:
+                                        # Append new example to existing ones
+                                        new_data = {
+                                            'instruction': data['instruction'],
+                                            'few_shot_examples': existing_examples + [example]
+                                        }
+                                        save_data(new_data)
+                                        st.session_state.data = new_data  # Update session state
                                     st.success(f"Added completion {i+1} to examples!")
                                     st.rerun()  # Updated from experimental_rerun
                     
