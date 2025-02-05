@@ -29,12 +29,6 @@
 </p>
 
 
-## Demo
-
-<p align="center">
-  <img src="assets/demo.gif" alt="Text Improvement Assistant Demo">
-</p>
-
 ## Overview
 
 Text Improvement Assistant is an AI-powered tool that helps improve text quality using DSPy and large language models. It provides a web interface for text enhancement with reasoning and issue identification.
