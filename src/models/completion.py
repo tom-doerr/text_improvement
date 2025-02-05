@@ -6,8 +6,8 @@ class CompletionResult:
     index: int
     success: bool
     reasoning: str
-    issues: Optional[str] = None
-    improved_text: Optional[str] = None
+    issues: str
+    improved_text: str
     error_message: Optional[str] = None
 
     @classmethod
@@ -17,7 +17,8 @@ class CompletionResult:
             success=True,
             reasoning=reasoning,
             issues=issues,
-            improved_text=improved_text
+            improved_text=improved_text,
+            error_message=None
         )
 
     @classmethod
@@ -25,5 +26,8 @@ class CompletionResult:
         return cls(
             index=index,
             success=False,
-            reasoning=error_message
+            reasoning=error_message,
+            issues="",
+            improved_text="",
+            error_message=error_message
         )
