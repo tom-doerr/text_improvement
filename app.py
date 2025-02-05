@@ -14,7 +14,8 @@ DATA_FILE = 'data.json'  # Format: {"instruction": "", "few_shot_examples": [], 
 
 # Initialize LM
 # dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=True, max_tokens=200))
-dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=1.5, cache=False, max_tokens=300))
+# dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=1.5, cache=False, max_tokens=300))
+dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=2.0, cache=False, max_tokens=300))
 
 
 def load_data():
@@ -55,8 +56,6 @@ def save_data(data):
         json.dump(data, f, indent=2)
 
 def main():
-    st.title("SimpleDSPY Interface")
-    
     if 'data' not in st.session_state:
         st.session_state.data = load_data()
         st.session_state.modified = False
