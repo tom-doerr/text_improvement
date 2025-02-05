@@ -33,6 +33,29 @@
 
 Text Improvement Assistant is an AI-powered tool that helps improve text quality using DSPy and large language models. It provides a web interface for text enhancement with reasoning and issue identification.
 
+### How it Works
+
+The assistant uses a few-shot learning approach to improve text quality:
+
+1. **Examples**: You can save example improvements that demonstrate the kind of changes you want. Each example contains:
+   - Original input text
+   - Reasoning behind the changes
+   - Issues identified
+   - Improved version
+
+2. **Learning**: When improving new text, the system:
+   - Uses your saved examples to understand your style preferences
+   - Applies similar improvement patterns to new inputs
+   - Provides detailed reasoning for changes
+   - Identifies potential issues
+   - Generates improved versions
+
+3. **Customization**: You can:
+   - Add successful improvements as new examples
+   - Edit existing examples
+   - Provide custom instructions
+   - Generate multiple variations
+
 ## Features
 
 - 🌐 **Web Interface**: User-friendly Streamlit interface
