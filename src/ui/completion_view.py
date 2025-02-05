@@ -95,9 +95,12 @@ class CompletionView:
             status.empty()
             
             for result in results:
-                self.render_completion_result(
-                    result,
-                    input_text,
-                    placeholders[result.index]
-                )
+                if 0 <= result.index < len(placeholders):
+                    self.render_completion_result(
+                        result,
+                        input_text,
+                        placeholders[result.index]
+                    )
+                else:
+                    st.error(f"Invalid completion index: {result.index}")
                 st.markdown("---")

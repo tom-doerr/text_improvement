@@ -68,9 +68,9 @@ class ExampleView:
                 continue
                 
             with st.expander(f"Edit Example {i+1}", expanded=False):
-                example, was_modified = self.render_example_editor(example, i)
+                new_example, was_modified = self.render_example_editor(example, i)
                 if was_modified:
-                    examples[i] = example
+                    examples[i] = new_example
                     modified = True
         
         # Auto-save changes when modifications are detected

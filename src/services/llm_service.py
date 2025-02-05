@@ -24,6 +24,12 @@ class LLMService:
         Generate a completion using the configured LLM.
         Returns tuple of (reasoning, issues, improved_text)
         """
+        if not instruction:
+            instruction = "Improve the text by fixing any issues with grammar, clarity, and style."
+            
+        if not input_text.strip():
+            raise ValueError("Input text cannot be empty")
+            
         from simpledspy import pipe
         return pipe(
             [ex.to_dict() for ex in examples],

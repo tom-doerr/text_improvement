@@ -13,6 +13,9 @@ class CompletionService:
 
     def generate_single_completion(self, input_text: str, index: int) -> CompletionResult:
         """Generate a single completion"""
+        if not input_text.strip():
+            return CompletionResult.failure(index, "Input text cannot be empty")
+            
         try:
             print(f"\nDEBUG: Starting completion {index+1}")
             

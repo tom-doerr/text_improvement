@@ -40,8 +40,12 @@ class DataService:
     def save_data(self, data: Dict[str, Any]) -> None:
         print("\nDEBUG: Saving data")
         print(f"DEBUG: Saving data: {json.dumps(data, indent=2)}")
-        with open(self.data_file, 'w') as f:
-            json.dump(data, f, indent=2)
+        try:
+            with open(self.data_file, 'w') as f:
+                json.dump(data, f, indent=2)
+        except (IOError, PermissionError) as e:
+            print(f"ERROR: Failed to save data: {e}")
+            raise RuntimeError(f"Failed to save data: {e}")
 
     def get_examples(self) -> List[Example]:
         data = self.load_data()
