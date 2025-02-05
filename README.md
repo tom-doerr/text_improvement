@@ -1,13 +1,32 @@
-<div align="center">
+<p align="center">
+    <a href="https://github.com/tom-doerr/text_improvement/stargazers"
+        ><img
+            src="https://img.shields.io/github/stars/tom-doerr/text_improvement?colorA=2c2837&colorB=c9cbff&style=for-the-badge&logo=starship"
+            alt="Repository's starts"
+    /></a>
+    <a href="https://github.com/tom-doerr/text_improvement/issues"
+        ><img
+            src="https://img.shields.io/github/issues-raw/tom-doerr/text_improvement?colorA=2c2837&colorB=f2cdcd&style=for-the-badge&logo=starship"
+            alt="Issues"
+    /></a>
+    <a href="https://github.com/tom-doerr/text_improvement/blob/main/LICENSE"
+        ><img
+            src="https://img.shields.io/github/license/tom-doerr/text_improvement?colorA=2c2837&colorB=b5e8e0&style=for-the-badge&logo=starship"
+            alt="License"
+    /><br />
+    <a href="https://github.com/tom-doerr/text_improvement/commits/main"
+        ><img
+            src="https://img.shields.io/github/last-commit/tom-doerr/text_improvement/main?colorA=2c2837&colorB=ddb6f2&style=for-the-badge&logo=starship"
+            alt="Latest commit"
+    /></a>
+    <a href="https://github.com/tom-doerr/text_improvement"
+        ><img
+            src="https://img.shields.io/github/repo-size/tom-doerr/text_improvement?colorA=2c2837&colorB=89DCEB&style=for-the-badge&logo=starship"
+            alt="GitHub repository size"
+    /></a>
+</p>
 
 # Text Improvement Assistant
-
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg?style=flat-square&logo=python)](https://www.python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.29-FF4B4B.svg?style=flat-square&logo=streamlit)](https://streamlit.io)
-[![DSPy](https://img.shields.io/badge/DSPy-2.5.6-green.svg?style=flat-square)](https://dspy.ai)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-
-</div>
 
 ## Overview
 
