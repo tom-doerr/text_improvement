@@ -29,6 +29,12 @@
 </p>
 
 
+## Demo
+
+<p align="center">
+  <img src="assets/demo.gif" alt="Text Improvement Assistant Demo">
+</p>
+
 ## Overview
 
 Text Improvement Assistant is an AI-powered tool that helps improve text quality using DSPy and large language models. It provides a web interface for text enhancement with reasoning and issue identification.
@@ -68,7 +74,7 @@ The assistant uses a few-shot learning approach to improve text quality:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/text_improvement.git
+git clone https://github.com/tom-doerr/text_improvement.git
 cd text_improvement
 
 # Install dependencies
