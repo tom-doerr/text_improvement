@@ -1,3 +1,5 @@
+<h1 align="center">Text Improvement Assistant</h1>
+
 <p align="center">
     <a href="https://github.com/tom-doerr/text_improvement/stargazers"
         ><img
@@ -26,7 +28,6 @@
     /></a>
 </p>
 
-# Text Improvement Assistant
 
 ## Overview
 
