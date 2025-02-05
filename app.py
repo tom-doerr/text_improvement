@@ -108,31 +108,51 @@ def main():
             def generate_completion(i):
                 try:
                     status.text(f"Generating completion {i+1}...")
+                    print(f"\nDEBUG: Starting completion {i+1}")
+                    print(f"DEBUG: Input length: {len(input_text)}")
+                    print(f"DEBUG: Number of examples: {len(data['few_shot_examples'])}")
+                    
                     reasoning, issues, improved_text = pipe(
                         data['few_shot_examples'],
                         data['instruction'],
                         input_text
                     )
+                    
+                    print(f"DEBUG: Completion {i+1} successful")
+                    print(f"DEBUG: Reasoning length: {len(reasoning)}")
+                    print(f"DEBUG: Issues length: {len(issues)}")
+                    print(f"DEBUG: Improved text length: {len(improved_text)}")
+                    
                     return i, True, reasoning, issues, improved_text
                 except Exception as e:
-                    return i, False, str(e), None, None
+                    print(f"\nDEBUG: Error in completion {i+1}: {str(e)}")
+                    return i, False, f"Generation failed: {str(e)}", None, None
 
             # Execute completions in parallel
             completed = 0
             results = []
             
+            print("\nDEBUG: Starting parallel completion generation")
+            print(f"DEBUG: Requesting {num_completions} completions")
+            
             with concurrent.futures.ThreadPoolExecutor(max_workers=num_completions) as executor:
-                futures = [executor.submit(generate_completion, i) for i in range(num_completions)]
+                futures = {executor.submit(generate_completion, i): i for i in range(num_completions)}
                 
                 for future in concurrent.futures.as_completed(futures):
+                    i = futures[future]
                     completed += 1
                     progress.progress(completed / num_completions)
                     
                     try:
-                        i, success, *result = future.result()
-                        results.append((i, success, result))
+                        result = future.result(timeout=60)  # 60 second timeout
+                        results.append(result)
+                        print(f"DEBUG: Completion {i+1} finished processing")
+                    except concurrent.futures.TimeoutError:
+                        print(f"\nDEBUG: Completion {i+1} timed out")
+                        results.append((i, False, ["Generation timed out after 60 seconds", None, None]))
                     except Exception as e:
-                        results.append((i, False, [f"Execution failed: {str(e)}", None, None]))
+                        print(f"\nDEBUG: Error processing completion {i+1}: {str(e)}")
+                        results.append((i, False, [f"Processing failed: {str(e)}", None, None]))
 
             progress.empty()
             status.empty()
