@@ -1,25 +1,11 @@
-import streamlit as st
-from simpledspy import pipe
-import json
-import os
-import dspy
-from dspy.teleprompt import BootstrapFewShot
-from copy import deepcopy
-import pyperclip
-import concurrent.futures
+from src.ui.main_view import MainView
 
-st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
+def main():
+    view = MainView()
+    view.render()
 
-# Store few-shot examples and instructions in JSON file
-DATA_FILE = 'data.json'  # Format: {"instruction": "", "few_shot_examples": [], "last_run": {}}
-
-# Initialize LM
-# dspy.settings.configure(lm=dspy.LM('openrouter/deepseek/deepseek-chat', temperature=1.5, cache=True, max_tokens=200))
-# dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=1.5, cache=False, max_tokens=300))
-dspy.settings.configure(lm=dspy.LM('openrouter/anthropic/claude-3.5-sonnet', temperature=2.0, cache=False, max_tokens=300))
-
-
-def load_data():
+if __name__ == '__main__':
+    main()
     print(f"\nDEBUG: Checking if {DATA_FILE} exists")
     if not os.path.exists(DATA_FILE):
         print("DEBUG: File doesn't exist, creating initial data")
