@@ -11,7 +11,7 @@
 
 ## Overview
 
-Text Improvement Assistant is an AI-powered tool that helps improve text quality using DSPy and large language models. It provides both a web interface (Streamlit) and CLI for text enhancement with reasoning and issue identification.
+Text Improvement Assistant is an AI-powered tool that helps improve text quality using DSPy and large language models. It provides a web interface for text enhancement with reasoning and issue identification.
 
 ## Features
 
@@ -19,7 +19,7 @@ Text Improvement Assistant is an AI-powered tool that helps improve text quality
 - 🔄 **Multiple Completions**: Generate multiple improved versions
 - 📝 **Example Management**: Save and edit example improvements
 - 🤖 **DSPy Integration**: Leverages DSPy for LLM optimization
-- 💻 **CLI Support**: Command-line interface for scripting
+- 🔍 **Detailed Analysis**: Provides reasoning and identifies issues
 
 ## Installation
 
@@ -37,40 +37,25 @@ export OPENROUTER_API_KEY='your-api-key'
 
 ## Usage
 
-### Web Interface
-
 ```bash
 streamlit run app.py
 ```
 
 Visit `http://localhost:8501` in your browser.
 
-### Command Line
-
-```bash
-python main.py
-```
-
-Commands:
-- `\note <text>`: Add instruction note
-- `\add`: Add last run to examples
-
 ## Configuration
 
 The system uses:
-- DSPy with DeepSeek Chat model
+- DSPy with Claude 3.5 Sonnet model
 - JSON storage for examples and instructions
 - Streamlit for web interface
-- Temperature of 1.5 for varied outputs
+- Temperature of 2.0 for varied outputs
 
 ## Development
 
 ```bash
 # Install development dependencies
 pip install -r requirements-dev.txt
-
-# Run tests
-pytest
 
 # Run linting
 flake8
