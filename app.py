@@ -118,75 +118,64 @@ def main():
                 futures = [executor.submit(generate_completion, i) for i in range(num_completions)]
                 
                 for future in concurrent.futures.as_completed(futures):
-                    i, reasoning, issues, improved_text = future.result()
-                    
-                    if reasoning is None:
-                        st.error(f"Error processing completion {i+1}")
-                        continue
-                    # Handle different return types
-                    # if isinstance(result, tuple):
-                        # reasoning, issues, improved_text = result
-                    # elif isinstance(result, dict):
-                        # reasoning = result.get('reasoning', '')
-                        # issues = result.get('issues', '')
-                        # improved_text = result.get('improved_text', reasoning)
-                    # else:
-                        # # Handle string or other return types
-                        # reasoning = str(result)
-                        # issues = ''
-                        # improved_text = str(result)
-                    
-                    with placeholders[i].container():
-                        with st.spinner("Processing..."):
-                            with st.expander("Reasoning", expanded=True):
-                                st.write(reasoning)
+                    try:
+                        i, reasoning, issues, improved_text = future.result()
                         
-                            with st.expander("Issues", expanded=True):
-                                st.write(issues)
+                        if reasoning is None:
+                            st.error(f"Error processing completion {i+1}")
+                            continue
                         
-                            with st.expander("Improved Text", expanded=True):
-                                st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
-                                if st.button("Copy to Clipboard", key=f"copy_{i}"):
-                                    try:
-                                        pyperclip.copy(improved_text)
-                                        st.success("Copied to clipboard!")
-                                    except Exception as e:
-                                        st.error(f"Failed to copy: {str(e)}")
-                                
-                                if st.button(f"Add to Fewshot", key=f"add_{i}"):
-                                    example = {
-                                        'input_text': input_text,
-                                        'reasoning': reasoning,
-                                        'issues': issues,
-                                        'improved_text': improved_text
-                                    }
+                        with placeholders[i].container():
+                            with st.spinner("Processing..."):
+                                with st.expander("Reasoning", expanded=True):
+                                    st.write(reasoning)
+                            
+                                with st.expander("Issues", expanded=True):
+                                    st.write(issues)
+                            
+                                with st.expander("Improved Text", expanded=True):
+                                    st.text_area("Improved Text", value=improved_text, height=100, key=f"improved_{i}", label_visibility="collapsed")
+                                    if st.button("Copy to Clipboard", key=f"copy_{i}"):
+                                        try:
+                                            pyperclip.copy(improved_text)
+                                            st.success("Copied to clipboard!")
+                                        except Exception as e:
+                                            st.error(f"Failed to copy: {str(e)}")
                                     
-                                    # Get existing examples and check for duplicates
-                                    existing_examples = data.get('few_shot_examples', [])
-                                    
-                                    # Check if this example is unique
-                                    is_duplicate = False
-                                    for existing in existing_examples:
-                                        if (existing['input_text'] == input_text and 
-                                            existing['improved_text'] == improved_text):
-                                            st.warning("This example already exists!")
-                                            is_duplicate = True
-                                            break
-                                    
-                                    if not is_duplicate:
-                                        # Append new example to existing ones
-                                        new_data = {
-                                            'instruction': data['instruction'],
-                                            'few_shot_examples': existing_examples + [example]
+                                    if st.button(f"Add to Fewshot", key=f"add_{i}"):
+                                        example = {
+                                            'input_text': input_text,
+                                            'reasoning': reasoning,
+                                            'issues': issues,
+                                            'improved_text': improved_text
                                         }
-                                        save_data(new_data)
-                                        st.session_state.data = new_data  # Update session state
-                                    st.success(f"Added completion {i+1} to examples!")
-                                    st.rerun()  # Updated from experimental_rerun
-                    
-                    st.markdown("---")
-                except Exception as e:
-                    st.error(f"Error processing completion {i+1}: {str(e)}")
+                                        
+                                        # Get existing examples and check for duplicates
+                                        existing_examples = data.get('few_shot_examples', [])
+                                        
+                                        # Check if this example is unique
+                                        is_duplicate = False
+                                        for existing in existing_examples:
+                                            if (existing['input_text'] == input_text and 
+                                                existing['improved_text'] == improved_text):
+                                                st.warning("This example already exists!")
+                                                is_duplicate = True
+                                                break
+                                        
+                                        if not is_duplicate:
+                                            # Append new example to existing ones
+                                            new_data = {
+                                                'instruction': data['instruction'],
+                                                'few_shot_examples': existing_examples + [example]
+                                            }
+                                            save_data(new_data)
+                                            st.session_state.data = new_data  # Update session state
+                                        st.success(f"Added completion {i+1} to examples!")
+                                        st.rerun()  # Updated from experimental_rerun
+                        
+                        st.markdown("---")
+                    except Exception as e:
+                        st.error(f"Error processing completion {i+1}: {str(e)}")
     
     @st.fragment
     def edit_examples(examples, data):
