@@ -6,6 +6,7 @@ import dspy
 from dspy.teleprompt import BootstrapFewShot
 from copy import deepcopy
 import pyperclip
+import concurrent.futures
 
 st.set_page_config(layout="wide", page_title="Text Improvement Assistant")
 
@@ -101,14 +102,27 @@ def main():
                     st.markdown(f"### Completion {i+1}")
                     placeholders.append(st.empty())
             
-            for i in range(num_completions):
+            def generate_completion(i):
                 try:
-                    # result = pipe(
                     reasoning, issues, improved_text = pipe(
-                        data['few_shot_examples'], 
-                        data['instruction'], 
+                        data['few_shot_examples'],
+                        data['instruction'],
                         input_text
                     )
+                    return i, reasoning, issues, improved_text
+                except Exception as e:
+                    return i, None, None, None
+
+            # Execute completions in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=num_completions) as executor:
+                futures = [executor.submit(generate_completion, i) for i in range(num_completions)]
+                
+                for future in concurrent.futures.as_completed(futures):
+                    i, reasoning, issues, improved_text = future.result()
+                    
+                    if reasoning is None:
+                        st.error(f"Error processing completion {i+1}")
+                        continue
                     # Handle different return types
                     # if isinstance(result, tuple):
                         # reasoning, issues, improved_text = result
