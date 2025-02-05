@@ -102,28 +102,46 @@ def main():
                     st.markdown(f"### Completion {i+1}")
                     placeholders.append(st.empty())
             
+            progress = st.progress(0)
+            status = st.empty()
+
             def generate_completion(i):
                 try:
+                    status.text(f"Generating completion {i+1}...")
                     reasoning, issues, improved_text = pipe(
                         data['few_shot_examples'],
                         data['instruction'],
                         input_text
                     )
-                    return i, reasoning, issues, improved_text
+                    return i, True, reasoning, issues, improved_text
                 except Exception as e:
-                    return i, None, None, None
+                    return i, False, str(e), None, None
 
             # Execute completions in parallel
+            completed = 0
+            results = []
+            
             with concurrent.futures.ThreadPoolExecutor(max_workers=num_completions) as executor:
                 futures = [executor.submit(generate_completion, i) for i in range(num_completions)]
                 
                 for future in concurrent.futures.as_completed(futures):
+                    completed += 1
+                    progress.progress(completed / num_completions)
+                    
                     try:
-                        i, reasoning, issues, improved_text = future.result()
-                        
-                        if reasoning is None:
-                            st.error(f"Error processing completion {i+1}")
-                            continue
+                        i, success, *result = future.result()
+                        results.append((i, success, result))
+                    except Exception as e:
+                        results.append((i, False, [f"Execution failed: {str(e)}", None, None]))
+
+            progress.empty()
+            status.empty()
+
+            # Process results in order
+            for i, success, (reasoning_or_error, issues, improved_text) in sorted(results):
+                if not success:
+                    st.error(f"Error processing completion {i+1}: {reasoning_or_error}")
+                    continue
                         
                         with placeholders[i].container():
                             with st.spinner("Processing..."):
