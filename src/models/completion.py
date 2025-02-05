@@ -5,20 +5,20 @@ from typing import Optional
 class CompletionResult:
     index: int
     success: bool
+    error_message: Optional[str]
     reasoning: str
     issues: str
     improved_text: str
-    error_message: Optional[str] = None
 
     @classmethod
     def success(cls, index: int, reasoning: str, issues: str, improved_text: str):
         return cls(
             index=index,
             success=True,
+            error_message=None,
             reasoning=reasoning,
             issues=issues,
-            improved_text=improved_text,
-            error_message=None
+            improved_text=improved_text
         )
 
     @classmethod
@@ -26,8 +26,8 @@ class CompletionResult:
         return cls(
             index=index,
             success=False,
+            error_message=error_message,
             reasoning=error_message,
             issues="",
-            improved_text="",
-            error_message=error_message
+            improved_text=""
         )
