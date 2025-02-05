@@ -8,17 +8,12 @@ class CompletionResult:
     All fields are required to ensure proper initialization order.
     The factory methods handle creating appropriate values for success/failure cases.
     """
-    # Required fields that are always meaningful
     index: int
     success: bool
-    
-    # Content fields - will contain real content or error message
     reasoning: str
-    
-    # Optional fields - empty strings in failure case
-    issues: str = ""
-    improved_text: str = ""
-    error_message: str = ""
+    issues: str
+    improved_text: str
+    error_message: str
 
     @classmethod
     def success(cls, index: int, reasoning: str, issues: str, improved_text: str) -> 'CompletionResult':
@@ -28,7 +23,8 @@ class CompletionResult:
             success=True,
             reasoning=reasoning,
             issues=issues,
-            improved_text=improved_text
+            improved_text=improved_text,
+            error_message=""  # No error for successful completion
         )
 
     @classmethod
@@ -37,6 +33,8 @@ class CompletionResult:
         return cls(
             index=index,
             success=False,
-            reasoning=error_message,
+            reasoning=error_message,  # Use error message as reasoning for display
+            issues="",               # Empty string for failed completion
+            improved_text="",        # Empty string for failed completion
             error_message=error_message
         )
