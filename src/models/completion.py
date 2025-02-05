@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 @dataclass(frozen=True)
@@ -8,12 +8,13 @@ class CompletionResult:
     All fields are required to ensure proper initialization order.
     The factory methods handle creating appropriate values for success/failure cases.
     """
-    index: int
-    success: bool
-    reasoning: str
-    issues: str
-    improved_text: str
-    error_message: str
+    # Core fields
+    index: int = field()
+    success: bool = field()
+    reasoning: str = field()
+    issues: str = field()
+    improved_text: str = field()
+    error_message: str = field()
 
     @classmethod
     def success(cls, index: int, reasoning: str, issues: str, improved_text: str) -> 'CompletionResult':
